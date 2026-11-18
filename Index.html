@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0b0c; --panel:#161618; --panel2:#1e1e21; --line:#2e2e33; --fg:#f4f4f2; --mut:#a3a3a8;
+          --red:#e10600; --ok:#3ddc84; --warn:#ffb020; --bad:#ff5247; --none:#a3a3a8;
+          --head:'Barlow Condensed','Arial Narrow',Impact,sans-serif; }
+  * { box-sizing:border-box }
+  [hidden] { display:none !important }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui,sans-serif }
+  .top { background:#000; border-bottom:4px solid var(--red); padding:12px 16px }
+  .top > div { max-width:1000px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
+  .brand { font:italic 800 28px/1 var(--head); text-transform:uppercase; letter-spacing:.02em }
+  .brand span { color:var(--red); margin-left:6px }
+  #who { color:var(--mut); font-size:13px }
+  main { max-width:1000px; margin:0 auto; padding:16px }
+  h2 { font:800 20px/1 var(--head); text-transform:uppercase; letter-spacing:.06em; margin:28px 0 12px; display:flex; align-items:center; gap:10px }
+  h2::before { content:''; width:6px; height:20px; background:var(--red); transform:skewX(-20deg) }
+  input,select,textarea,button { font:inherit; color:var(--fg); background:var(--panel2); border:1px solid var(--line); border-radius:2px; padding:8px 10px; min-height:44px }
+  button { cursor:pointer; font:600 14px var(--head); letter-spacing:.08em; text-transform:uppercase; font-size:15px }
+  button:hover { border-color:var(--mut) }
+  button.pri { background:var(--red); border-color:var(--red); color:#fff; padding:8px 22px; clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%) }
+  button.pri:hover { background:#ff1a12 }
+  button.link { background:none; border:none; color:var(--mut); text-decoration:underline; min-height:auto; padding:0 }
+  :focus-visible { outline:2px solid #fff; outline-offset:2px }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px }
+  .card { background:var(--panel); border:1px solid var(--line); padding:12px 14px;
+          clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%) }
+  .st { border-left:4px solid var(--none) }
+  .st.aman { border-left-color:var(--ok) } .st.dekat { border-left-color:var(--warn) } .st.lewat { border-left-color:var(--bad) }
+  .st b { font:600 15px var(--head); text-transform:uppercase; letter-spacing:.08em; color:var(--mut); display:block }
+  .st .big { font:800 26px/1.1 var(--head); text-transform:uppercase; display:block; margin:2px 0 4px }
+  .aman .big { color:var(--ok) } .dekat .big { color:var(--warn) } .lewat .big { color:var(--bad) } .kosong .big { color:var(--none) }
+  .st small { color:var(--mut) }
+  label { display:block; font:600 13px var(--head); letter-spacing:.1em; text-transform:uppercase; color:var(--mut); margin-bottom:4px }
+  .f { display:flex; flex-direction:column; flex:1; min-width:140px }
+  .chk { display:flex; gap:10px; align-items:center; padding:6px 0; border-bottom:1px solid var(--line) }
+  .chk input[type=checkbox] { width:22px; height:22px; min-height:0; accent-color:var(--red) }
+  .chk label { margin:0; font-size:16px; color:var(--fg); flex:1 }
+  .chk input[type=number] { width:130px }
+  table { width:100%; border-collapse:collapse } th,td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top }
+  th { font:600 13px var(--head); letter-spacing:.1em; text-transform:uppercase; color:var(--mut) }
+  .r { text-align:right; white-space:nowrap } .tbl { overflow-x:auto }
+  details > summary { cursor:pointer; color:var(--fg); font-weight:600 }
+  a { color:#ff7a70 }
+  #msg { min-height:22px; color:var(--bad); margin-bottom:8px; font-weight:600 }
+  #msg.ok { color:var(--warn) }
+  .onb { max-width:460px; margin:40px auto }
+  .onb h1 { font:italic 800 34px/1 var(--head); text-transform:uppercase; margin:0 0 8px }
+  .onb p { color:var(--mut) }
+</style>
+<title>Rekap Bengkel</title>
+</head>
+<body>
+<header class="top"><div>
+  <div class="brand">Rekap<span>Bengkel</span></div>
+  <div id="who"></div>
+</div></header>
+<main>
+<div id="msg" role="alert"></div>
+
+<section id="onboard" class="onb card" hidden>
+  <h1>Mulai dari motormu</h1>
+  <p>Data tersimpan di Spreadsheet pribadi di Google Drive akunmu. Tidak ada akun lain yang bisa melihatnya.</p>
+  <form id="onbForm">
+    <div class="f"><label for="onNama">Nama motor</label><input id="onNama" placeholder="mis. Vario 160" required></div>
+    <div class="f" style="margin-top:10px"><label for="onKm">Km saat ini</label><input id="onKm" type="number" min="0" required></div>
+    <p><button class="pri">Mulai</button></p>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <div class="row">
+    <div class="f" style="max-width:220px"><label for="motor">Motor</label><select id="motor"></select></div>
+    <div class="f" style="max-width:150px"><label for="kmNow">Km sekarang</label><input id="kmNow" type="number" min="0"></div>
+    <button id="btnKm">Update km</button>
+    <div class="f" style="max-width:180px"><label for="pajak">Pajak STNK jatuh tempo</label><input id="pajak" type="date"></div>
+    <button id="btnPajak">Simpan</button>
+    <button id="btnMotor" class="link" style="margin-left:auto">+ Motor baru</button>
+  </div>
+
+  <h2>Status pengingat</h2>
+  <div id="status" class="grid"></div>
+
+  <h2>Catat servis</h2>
+  <form id="form" class="card">
+    <div class="row">
+      <div class="f"><label for="tanggal">Tanggal</label><input id="tanggal" type="date" required></div>
+      <div class="f"><label for="km">Km saat servis</label><input id="km" type="number" min="0" required></div>
+      <div class="f"><label for="tipe">Tipe</label><select id="tipe"><option>Sebagian</option><option>Full</option></select></div>
+      <div class="f"><label for="bengkel">Bengkel</label><input id="bengkel"></div>
+    </div>
+    <label style="margin-top:16px">Komponen yang diservis (isi biaya jasa jika ada)</label>
+    <div id="komp"></div>
+    <label style="margin-top:16px">Part yang diganti</label>
+    <div id="parts"></div>
+    <button type="button" id="addPart">+ Tambah part</button>
+    <div class="row" style="margin-top:16px">
+      <div class="f"><label for="catatan">Catatan</label><input id="catatan"></div>
+      <div class="f"><label for="nota">Foto nota (opsional)</label><input id="nota" type="file" accept="image/*"></div>
+    </div>
+    <p><button class="pri" id="btnSave">Simpan servis</button></p>
+  </form>
+
+  <h2>Riwayat</h2>
+  <div class="row"><div class="f" style="max-width:220px"><label for="filter">Filter komponen</label><select id="filter"></select></div></div>
+  <div class="tbl"><table><thead><tr><th>Tanggal</th><th>Km</th><th>Tipe</th><th>Detail</th><th class="r">Total</th><th></th></tr></thead><tbody id="hist"></tbody></table></div>
+</div>
+</main>
+
+<script>
+const FULL = ['Oli mesin', 'CVT', 'Injeksi', 'Gardan'];
+let D, busy = false;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rp = n => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+const motor = () => $('motor').value;
+const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
+
+function msg(t, ok) { const m = $('msg'); m.textContent = t || ''; m.className = ok ? 'ok' : ''; }
+function call(fn, ...args) {
+  if (busy) return; busy = true; msg('');
+  document.body.style.cursor = 'progress';
+  const ok = typeof args[args.length - 1] === 'function' ? args.pop() : null;
+  google.script.run
+    .withSuccessHandler(d => { busy = false; document.body.style.cursor = ''; D = d; render(); if (d.warn) msg(d.warn, true); if (ok) ok(); })
+    .withFailureHandler(e => { busy = false; document.body.style.cursor = ''; msg(e.message); })[fn](...args);
+}
+
+function render() {
+  $('onboard').hidden = !D.onboarding;
+  $('app').hidden = !!D.onboarding;
+  $('who').textContent = D.email || '';
+  if (D.onboarding) return;
+  const cur = motor();
+  $('motor').innerHTML = D.motors.map(m => `<option>${esc(m.nama)}</option>`).join('');
+  if (D.motors.some(m => m.nama === cur)) $('motor').value = cur;
+  renderMotor(); renderKomp(); renderHist();
+}
+function renderMotor() {
+  const m = D.motors.find(x => x.nama === motor()) || {};
+  $('kmNow').value = m.km ?? ''; $('pajak').value = m.pajak_jatuh_tempo || '';
+  const label = { aman: 'Aman', dekat: 'Mendekati', lewat: 'Lewat', kosong: 'Belum ada data' };
+  $('status').innerHTML = D.status.filter(s => s.motor === motor()).map(s => {
+    const p = [];
+    if (s.sisaKm != null) p.push(s.sisaKm < 0 ? `lewat ${-s.sisaKm} km` : `sisa ${s.sisaKm} km`);
+    if (s.sisaHari != null) p.push(s.sisaHari < 0 ? `lewat ${-s.sisaHari} hari` : `sisa ${s.sisaHari} hari`);
+    return `<div class="card st ${s.state}"><b>${esc(s.komponen)}</b><span class="big">${label[s.state]}</span><small>${p.join(' · ')}</small></div>`;
+  }).join('');
+}
+function renderKomp() {
+  const opts = D.jadwal.map(j => j.komponen);
+  const checked = new Set([...document.querySelectorAll('#komp input[type=checkbox]:checked')].map(c => c.value));
+  $('komp').innerHTML = opts.map((k, i) =>
+    `<div class="chk"><input type="checkbox" id="k${i}" value="${esc(k)}" ${checked.has(k) ? 'checked' : ''}>
+     <label for="k${i}">${esc(k)}</label><input type="number" min="0" placeholder="biaya jasa" aria-label="Biaya jasa ${esc(k)}"></div>`).join('');
+  const f = $('filter').value;
+  $('filter').innerHTML = '<option value="">Semua</option>' + opts.map(k => `<option>${esc(k)}</option>`).join('');
+  $('filter').value = f;
+}
+function renderHist() {
+  const f = $('filter').value;
+  const rows = D.servis.filter(s => s.motor === motor() && (!f || s.items.some(i => i.komponen === f)));
+  $('hist').innerHTML = rows.map(s => `<tr>
+    <td>${esc(s.tanggal)}</td><td>${esc(s.km)}</td><td>${esc(s.tipe)}</td>
+    <td><details><summary>${esc(s.items.map(i => i.komponen).filter((v, i, a) => a.indexOf(v) === i).join(', '))}</summary>
+      ${s.items.map(i => `${esc(i.aksi)}: ${esc(i.komponen)}${i.nama ? ' – ' + esc(i.nama) : ''} (${rp(i.biaya)})`).join('<br>')}
+      ${s.bengkel ? '<br>Bengkel: ' + esc(s.bengkel) : ''}${s.catatan ? '<br>' + esc(s.catatan) : ''}
+      ${/^https:\/\//.test(s.link_nota) ? `<br><a href="${esc(s.link_nota)}" target="_blank" rel="noopener">Foto nota</a>` : ''}</details></td>
+    <td class="r">${rp(s.total)}</td>
+    <td><button data-del="${esc(s.id)}" aria-label="Hapus servis ${esc(s.tanggal)}">Hapus</button></td></tr>`).join('')
+    || '<tr><td colspan="6">Belum ada riwayat.</td></tr>';
+}
+
+function addPart() {
+  const d = document.createElement('div'); d.className = 'row part'; d.style.marginBottom = '8px';
+  d.innerHTML = `<select aria-label="Komponen part">${D.jadwal.map(j => `<option>${esc(j.komponen)}</option>`).join('')}<option>Lainnya</option></select>
+    <input class="pn" placeholder="Nama part" aria-label="Nama part" style="flex:1;min-width:140px">
+    <input class="pb" type="number" min="0" placeholder="Biaya" aria-label="Biaya part" style="width:130px">
+    <button type="button" aria-label="Hapus baris part">×</button>`;
+  d.querySelector('button').onclick = () => d.remove();
+  $('parts').appendChild(d);
+}
+
+function collect() {
+  const items = [];
+  document.querySelectorAll('#komp .chk').forEach(r => {
+    const c = r.querySelector('input[type=checkbox]');
+    if (c.checked) items.push({ komponen: c.value, aksi: 'servis', nama: '', biaya: r.querySelector('input[type=number]').value });
+  });
+  document.querySelectorAll('#parts .part').forEach(r => {
+    const nama = r.querySelector('.pn').value.trim();
+    if (nama) items.push({ komponen: r.querySelector('select').value, aksi: 'ganti', nama, biaya: r.querySelector('.pb').value });
+  });
+  return items;
+}
+
+$('onbForm').onsubmit = e => { e.preventDefault(); call('onboard', $('onNama').value, $('onKm').value); };
+$('motor').onchange = () => { renderMotor(); renderHist(); };
+$('filter').onchange = renderHist;
+$('addPart').onclick = addPart;
+$('btnKm').onclick = () => call('updateKm', motor(), $('kmNow').value, false);
+$('btnPajak').onclick = () => call('setPajak', motor(), $('pajak').value);
+$('btnMotor').onclick = () => {
+  const nama = (prompt('Nama motor baru:') || '').trim();
+  if (!nama) return;
+  const km = prompt('Km saat ini:', '0');
+  if (km !== null) call('addMotor', nama, km, () => { $('motor').value = nama; renderMotor(); renderHist(); });
+};
+$('tipe').onchange = () => {
+  const full = $('tipe').value === 'Full';
+  document.querySelectorAll('#komp input[type=checkbox]').forEach(c => { c.checked = full && FULL.includes(c.value); });
+};
+$('hist').onclick = e => {
+  const id = e.target.dataset.del;
+  if (id && confirm('Hapus servis ini?')) call('deleteServis', id);
+};
+
+$('form').onsubmit = async e => {
+  e.preventDefault();
+  const items = collect();
+  if (!items.length) return msg('Pilih minimal satu komponen atau isi satu part.');
+  const p = { motor: motor(), tanggal: $('tanggal').value, km: $('km').value, tipe: $('tipe').value,
+              bengkel: $('bengkel').value, catatan: $('catatan').value, items, nota: null };
+  const f = $('nota').files[0];
+  if (f) {
+    if (f.size > 4e6) return msg('Foto terlalu besar (maks 4 MB).');
+    const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.readAsDataURL(f); });
+    p.nota = { name: f.name, mime: f.type, b64 };
+  }
+  call('saveServis', p, () => { $('form').reset(); $('parts').innerHTML = ''; $('tanggal').value = today(); renderKomp(); });
+};
+
+$('tanggal').value = today();
+google.script.run.withSuccessHandler(d => { D = d; render(); }).withFailureHandler(e => msg(e.message)).getData();
+</script>
+</body>
+</html>
