@@ -123,12 +123,18 @@ const motor = () => $('motor').value;
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
 
 function msg(t, ok) { const m = $('msg'); m.textContent = t || ''; m.className = ok ? 'ok' : ''; }
+// Error render/data kosong harus tampil di halaman, bukan layar hitam diam-diam.
+function show(d) {
+  if (!d) return msg('Server mengembalikan data kosong. Cek Executions di Apps Script.');
+  D = d;
+  try { render(); } catch (e) { msg('Gagal menampilkan data: ' + (e.message || e)); }
+}
 function call(fn, ...args) {
   if (busy) return; busy = true; msg('');
   document.body.style.cursor = 'progress';
   const ok = typeof args[args.length - 1] === 'function' ? args.pop() : null;
   google.script.run
-    .withSuccessHandler(d => { busy = false; document.body.style.cursor = ''; D = d; render(); if (d.warn) msg(d.warn, true); if (ok) ok(); })
+    .withSuccessHandler(d => { busy = false; document.body.style.cursor = ''; show(d); if (D && D.warn) msg(D.warn, true); if (ok) ok(); })
     .withFailureHandler(e => { busy = false; document.body.style.cursor = ''; msg(e.message); })[fn](...args);
 }
 
@@ -237,7 +243,7 @@ $('form').onsubmit = async e => {
 };
 
 $('tanggal').value = today();
-google.script.run.withSuccessHandler(d => { D = d; render(); }).withFailureHandler(e => msg(e.message)).getData();
+google.script.run.withSuccessHandler(show).withFailureHandler(e => msg(e.message || String(e))).getData();
 </script>
 </body>
 </html>
